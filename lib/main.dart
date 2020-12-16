@@ -11,6 +11,22 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Map<int, Color> color =
+    {
+      50:Color.fromRGBO(139, 37, 24, .1),
+      100:Color.fromRGBO(139, 37, 24, .2),
+      200:Color.fromRGBO(139, 37, 24, .3),
+      300:Color.fromRGBO(139, 37, 24, .4),
+      400:Color.fromRGBO(139, 37, 24, .5),
+      500:Color.fromRGBO(139, 37, 24, .6),
+      600:Color.fromRGBO(139, 37, 24, .7),
+      700:Color.fromRGBO(139, 37, 24, .8),
+      800:Color.fromRGBO(139, 37, 24, .9),
+      900:Color.fromRGBO(139, 37, 24, 1),
+    };
+
+    MaterialColor custom_color = MaterialColor(0xFF700E4F, color);
+
     return MaterialApp(
       title: 'Raphael',
       theme: ThemeData(
@@ -23,9 +39,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.indigo,
+        primarySwatch: custom_color,
       ),
-      home: MyHomePage(title: 'Raphael - La Musica Mi Ha Salvato'),
+      home: MyHomePage(title: 'Raphael - La musica mi ha salvato'),
     );
   }
 }
@@ -87,6 +103,8 @@ class _MyHomePageState extends State<MyHomePage> {
     var padding = MediaQuery.of(context).padding;
     double newheight = height - padding.top - padding.bottom;
 
+    double reg = 1/2.5;
+    double reg_base = 4/5;
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -105,30 +123,62 @@ class _MyHomePageState extends State<MyHomePage> {
           opacity: selector ? 1.0 : 0.0,
           curve: Curves.fastOutSlowIn,
           child: Container(
+            transform: selector ? Matrix4.translation(vec.Vector3(0.0, -30.0, 0.0)) : Matrix4.translation(vec.Vector3(0.0,-30.0, 0.0)),
             height: height,
             width: width,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/cover_libro.jpg"),
-                fit: BoxFit.contain,
-              ),
-            ),
-            child: Column(
+            child: Stack(
               children: [
-                AnimatedContainer(
-                duration: Duration(milliseconds: 1500),
-                width: selector ? width*5/6 : width,
-                height: selector ? height*5/6 : height,
-                transform: selector ? Matrix4.translation(vec.Vector3(0.0, -20.0, 0.0)) : Matrix4.translation(vec.Vector3(0.0,-70.0, 0.0)),
-                curve: Curves.decelerate,
-                decoration: BoxDecoration(
+                Container(
+                  height: height*reg_base,
+                  width: width*reg_base,
+                  transform: selector ? Matrix4.translation(vec.Vector3(1/10*width, 30.0, 0.0)) : Matrix4.translation(vec.Vector3(1/10*width,30.0, 0.0)),
+                  decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/Raffaele_cover.png"),
-                      fit: BoxFit.contain,
-                    )
+                      image: AssetImage("assets/cover_libro.png"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),),
+                AnimatedOpacity(
+                  duration: Duration(milliseconds: 2000),
+                  opacity: selector ? 1.0 : 0.0,
+                  curve: Curves.decelerate,
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 1500),
+                    width: selector ? width*reg : width,
+                    height: selector ? height*reg : height,
+                    transform: selector ? Matrix4.translation(
+                        vec.Vector3((width-width*reg)/2, (height-height*reg)*(1-reg_base+0.1), 0.0)) : Matrix4.translation(
+                        vec.Vector3((width-width*reg)/4, (height-height*reg)*(1-2*reg_base), 0.0)),
+                    curve: Curves.decelerate,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/Raffaele_cover.png"),
+                          fit: BoxFit.fitHeight,
+                        )
+                    ),
+                  ),
                 ),
-              ),
+                AnimatedOpacity(
+                  duration: Duration(milliseconds: 1800),
+                  opacity: selector? 1.0 : 0.0,
+                  curve: Curves.easeInExpo,
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 500),
+                    width: selector ? width : width,
+                    height: selector ? height : height,
+                    transform: selector ? Matrix4.translation(
+                        vec.Vector3(0.0, (height-height*reg)*(1-reg_base+0.1)+0.2, 0.0)) : Matrix4.translation(
+                        vec.Vector3(0.0, (height-height*reg)*(1-reg_base+0.1)+0.2, 0.0)),
+                    curve: Curves.decelerate,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/titolo_libro.png"),
+                          fit: BoxFit.contain,
+                        )
+                    ),
+                  ),
 
+                ),
               ],
             ),
           ),
@@ -141,7 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
-        child: Icon(Icons.add),
+        child: Icon(Icons.menu_book),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
