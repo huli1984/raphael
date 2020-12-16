@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Raphael',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.indigo,
       ),
       home: MyHomePage(title: 'Raphael - La Musica Mi Ha Salvato'),
     );
@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool selector =  false;
 
   Future<void> _startAnimation() async {
-    Future.delayed(Duration(milliseconds: 50), () {
+    Future.delayed(Duration(milliseconds: 400), () {
       setState(() {
         selector = true;
       });
@@ -100,33 +100,40 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: AnimatedContainer(
+        child: AnimatedOpacity(
           duration: Duration(milliseconds: 1500),
-          width: selector ? width*6/7 : width*9/14,
-          height: selector ? height*6/7 : height*9/14,
-          transform: selector ? Matrix4.translation(vec.Vector3(0.0, 0.0, 0.0)) : Matrix4.translation(vec.Vector3(0.0,30.0, 0.0)),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/cover_libro.jpg"),
-              fit: BoxFit.cover,
+          opacity: selector ? 1.0 : 0.0,
+          curve: Curves.fastOutSlowIn,
+          child: Container(
+            height: height,
+            width: width,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/cover_libro.jpg"),
+                fit: BoxFit.contain,
+              ),
+            ),
+            child: Column(
+              children: [
+                AnimatedContainer(
+                duration: Duration(milliseconds: 1500),
+                width: selector ? width*5/6 : width,
+                height: selector ? height*5/6 : height,
+                transform: selector ? Matrix4.translation(vec.Vector3(0.0, -20.0, 0.0)) : Matrix4.translation(vec.Vector3(0.0,-70.0, 0.0)),
+                curve: Curves.decelerate,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/Raffaele_cover.png"),
+                      fit: BoxFit.contain,
+                    )
+                ),
+              ),
+
+              ],
             ),
           ),
-          child: Column(
-            children: [AnimatedContainer(
-              duration: Duration(milliseconds: 1500),
-              width: selector ? width*6/7 : width,
-              height: selector ? height*6/7 : height,
-              transform: selector ? Matrix4.translation(vec.Vector3(0.0, 0.0, 0.0)) : Matrix4.translation(vec.Vector3(0.0,-70.0, 0.0)),
-              curve: Curves.fastOutSlowIn,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/Raffaele_cover.png"),
-                    fit: BoxFit.cover,
-                  )
-              ),
-            ),],
-          ),
         ),
+
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
 
